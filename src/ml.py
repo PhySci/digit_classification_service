@@ -8,6 +8,7 @@ import pickle
 import os
 
 model_pth = os.path.join(os.path.dirname(__file__), "../models", 'svm.pkl')
+
 try:
     model = pickle.load(open(model_pth, 'rb'))
 except Exception as e:
@@ -16,20 +17,18 @@ except Exception as e:
 
 
 def get_features(image: Image.Image):
-    img = img_as_float(image)    
+    img = img_as_float(image)
     img = (img - np.min(img)) / (np.max(img) - np.min(img))
     img = filters.gaussian(img, sigma=0.5)
     img = rescale_intensity(img, in_range='image', out_range=(0, 1))
     hog_features = feature.hog(img, orientations=9, pixels_per_cell=(4, 4),
                                cells_per_block=(2, 2), visualize=False, feature_vector=True)
-    return hog_features
+    return np.array([hog_features])
 
 
 def predict_digit(image: Image.Image) -> tuple[int, float]:
     features = get_features(image)
-    probs = model.predict_proba([features])[0]
-    # Обработать, если функция вывалилась
+    probs = model.predict_proba(features)[0]
     prediction = np.argmax(probs)
     confidence = probs[prediction]
-
-    return prediction, confidence
+    return int(prediction), float(confidence)

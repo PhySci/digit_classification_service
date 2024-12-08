@@ -1,5 +1,8 @@
 build:
-	docker build -f docker/Dockerfile -t ml-service:latest src
+	docker build -f docker/Dockerfile -t ml-service:latest .
 
 run:
-	docker run --rm -it -p 8000:8000 ml-service:latest
+	docker run --rm -p 8050:8050 ml-service:latest
+
+stop:
+	docker stop ml-serivce:latest
