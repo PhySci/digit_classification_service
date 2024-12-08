@@ -43,9 +43,9 @@ class TestApp(unittest.TestCase):
                 image.save(image_path)
                 zipf.write(image_path, os.path.basename(image_path))
 
-    # @classmethod
-    # def tearDown(self) -> None:
-    #     shutil.rmtree("./images")
+    @classmethod
+    def tearDownClass(cls) -> None:
+        shutil.rmtree("./images")
 
     def test_predict_single_image(self):
         image_folder = os.path.join(os.path.dirname(__file__), "images")
